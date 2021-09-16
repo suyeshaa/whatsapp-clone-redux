@@ -12,6 +12,7 @@ import { useParams } from "react-router";
 import db from "../firebase";
 import firebase from "firebase";
 import "./Chat.css";
+import { v4 } from "uuid";
 
 const Chat = () => {
   const [seed, setSeed] = useState("");
@@ -85,7 +86,7 @@ const Chat = () => {
       <div className="chat__body">
         {messages.map((msg) => (
           <p
-            key={msg.uid}
+            key={v4()}
             className={`chat__message  ${
               //can do this way for the time being but in the long run since two ppl can have same name you can consider using id or some uniwue parameter
               msg.name === userData.displayName && "chat__receiver"
