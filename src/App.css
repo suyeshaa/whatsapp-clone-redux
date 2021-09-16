@@ -17,3 +17,31 @@
   margin-top: -50px;
   box-shadow: -1px 4px 10px -6px rgba(0, 0, 0, 0.2);
 }
+
+a {
+  text-decoration: none !important;
+  color: black;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.452);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(82, 82, 82, 0.507);
+}
+
+input:focus {
+  outline: none;
+}

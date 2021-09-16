@@ -7,8 +7,10 @@ import {
   SearchOutlined,
 } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import db from "../firebase";
+import firebase from "firebase";
 import "./Chat.css";
 
 const Chat = () => {
@@ -17,6 +19,7 @@ const Chat = () => {
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
+  const userData = useSelector((state) => state.user);
 
   useEffect(() => {
     if (roomId) {
@@ -42,6 +45,15 @@ const Chat = () => {
 
   const sendMessage = (e) => {
     e.preventDefault();
+
+    //to send msgs-> that is to display msgs that are written on footer to the chat body
+    db.collection("rooms").doc(roomId).collection("messages").add({
+      message: input,
+      name: userData.displayName,
+      //we will not display our local timestamp as time varies across the world hence we use our servers timestamp
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
     setInput("");
   };
 
@@ -51,7 +63,11 @@ const Chat = () => {
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="chat__headerInfo">
           <h3>{roomName}</h3>
-          <p>last seen..</p>
+          <p>
+            {new Date(
+              messages[messages.length - 1]?.timestamp?.toDate()
+            ).toUTCString()}
+          </p>
         </div>
         <div className="chat__headerRight">
           <IconButton>
@@ -68,7 +84,13 @@ const Chat = () => {
 
       <div className="chat__body">
         {messages.map((msg) => (
-          <p className={`chat__message  ${true && "chat__receiver"}`}>
+          <p
+            key={msg.uid}
+            className={`chat__message  ${
+              //can do this way for the time being but in the long run since two ppl can have same name you can consider using id or some uniwue parameter
+              msg.name === userData.displayName && "chat__receiver"
+            }`}
+          >
             <span className="chat__name">{msg.name}</span>
             {msg.message}
             <span className="chat__timestamp">

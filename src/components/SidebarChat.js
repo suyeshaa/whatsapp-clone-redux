@@ -22,13 +22,33 @@ const SidebarChat = ({ id, name, addNewChat }) => {
     }
   };
 
+  //=== to pull out last message===
+
+  // first we pull out all msgs
+  const [msgs, setMsgs] = useState([]);
+
+  useEffect(() => {
+    // if(id) is just for protection,, here id is same as roomId->that weve been using before
+    if (id) {
+      db.collection("rooms")
+        .doc(id)
+        .collection("messages")
+        .orderBy("timestamp", "desc")
+        .onSnapshot((snapshot) =>
+          setMsgs(snapshot.docs.map((doc) => doc.data()))
+        );
+    }
+  }, [id]);
+
+  //===============================
+
   return !addNewChat ? (
     <Link to={`/rooms/${id}`}>
       <div className="sidebarChat">
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
         <div className="sidebarChat__info">
           <h2>{name}</h2>
-          <p>Last message...</p>
+          <p>{msgs[0]?.message}</p>
         </div>
       </div>
     </Link>
