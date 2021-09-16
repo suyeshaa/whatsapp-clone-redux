@@ -1,11 +1,13 @@
 import { Avatar, IconButton } from "@material-ui/core";
 import { Chat, DonutLarge, MoreVert, SearchOutlined } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import db from "../firebase";
 import "./Sidebar.css";
 import SidebarChat from "./SidebarChat";
 
 const Sidebar = () => {
+  const userData = useSelector((state) => state.user);
   //insted of hard coding sidebarChat we are gonna bring them from our firebase
   const [rooms, setRooms] = useState([]);
 
@@ -29,7 +31,7 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar__header">
-        <Avatar />
+        <Avatar src={userData.photoURL} />
         <div className="sidebar__headerRight">
           <IconButton>
             <DonutLarge />

@@ -3,15 +3,22 @@ import React from "react";
 import "./Login.css";
 import logo from "../assets/logo.png";
 import { auth, provider } from "../firebase";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/user/userAction";
+// import { useSelector } from "react-redux";
 
 const Login = () => {
+  // const sta = useSelector(state => state.state)
+  const dispatch = useDispatch();
+
   const signIn = () => {
     auth
       .signInWithPopup(provider)
       .then((result) => {
         console.log(result);
+        dispatch(setUser(result.user));
       })
-      .catch((err) => alert(err.message));
+      .catch((err) => console.log(err.message));
   };
 
   return (
